@@ -12,7 +12,11 @@ public class TicTacToe extends JFrame implements ActionListener {
 	JLabel label1;
 	JButton redStarts;
 	JButton blackStarts;
-	
+	boolean redsTurn;
+	boolean end;
+	boolean isNumber;
+	boolean start;
+
 	/**
 	 * Game constructor.
 	 */
@@ -69,14 +73,119 @@ public class TicTacToe extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		String command = e.getActionCommand();
+		int index = 0;
+		try {
+			index = Integer.parseInt(command); 
+			isNumber = true; 
+		}
+		catch(NumberFormatException nfe) {
+			isNumber = false;
+		}
 		
+		if (command.equals("redStarts")){
+			newGame();
+			label1.setForeground(Color.RED);
+			label1.setText("red starts");
+			redsTurn = true;
+			start = true;
+		}
+		else if (command.equals("blackStarts")){
+			newGame();
+			label1.setForeground(Color.BLACK);
+			label1.setText("black starts");
+			redsTurn = false;
+			start = true;
+		}
+		else if (isNumber && !checkField(index,"X") && !checkField(index,"O") && start) {
+			if(redsTurn){
+				buttons[index].setForeground(Color.RED);
+				buttons[index].setText("O");
+				
+				if (verticalWin("O") || horizontalWin("O") || diagonalWin("O")){		// check if game is won
+					label1.setForeground(Color.RED);
+					label1.setText("red won!");
+					disableFields();
+					end = true;
+				}
+				else if(tie()) {
+					label1.setText("it's a tie! start again");
+				}
+				else {			
+					label1.setForeground(Color.BLACK);
+					label1.setText("blacks turn");
+					redsTurn = false;													// toggle the turn to black 
+				}
+			}
+			else {
+				buttons[index].setForeground(Color.BLACK);
+				buttons[index].setText("X");
+				
+				if (verticalWin("X") || horizontalWin("X") || diagonalWin("X")){
+					label1.setForeground(Color.BLACK);
+					label1.setText("black won!");
+					disableFields();
+					end = true;
+				}
+				else if(tie()) {
+					label1.setText("it's a tie! start again");
+				}
+				else {
+					label1.setForeground(Color.RED);
+					label1.setText("reds turn");
+					redsTurn = true;													// toggle the turn to red
+				}
+			}
+		}		
+	}
+	
+	public boolean verticalWin(String s){
+		return (checkField(0, s) && checkField(3, s) && checkField(6, s) ||
+				checkField(1, s) && checkField(4, s) && checkField(7, s) ||
+				checkField(2, s) && checkField(5, s) && checkField(8, s));
+	}
+	
+	public boolean horizontalWin(String s){
+		return (checkField(0, s) && checkField(1, s) && checkField(2, s) ||
+				checkField(3, s) && checkField(4, s) && checkField(5, s) ||
+				checkField(6, s) && checkField(7, s) && checkField(8, s));
+	}
+	
+	public boolean diagonalWin(String s){
+		return (checkField(0, s) && checkField(4, s) && checkField(8, s) ||
+				checkField(2, s) && checkField(4, s) && checkField(6, s));
+	}
+	public boolean tie(){
+		int count = 0;
+		for(int i=0; i<buttons.length; i++){
+			if (checkField(i, "X") || checkField(i, "O")){
+				count++;
+			}
+		}
+		return (count == 9);
+	}
+	
+	public void disableFields(){
+		for(int i = 0; i < buttons.length; i++) {
+			if(buttons[i].getText().equals("")) {
+				buttons[i].setEnabled(false); 
+			}								  
+		}
+	}
+	
+	public boolean checkField(int index, String input){
+		return buttons[index].getText().equals(input);
+	}
+	
+	public void newGame(){
+		for(int i=0; i<buttons.length; i++){
+			buttons[i].setText("");
+			buttons[i].setEnabled(true); 
+		}
+		end = false;
 	}
 
 	public static void main(String[] args) {
-		
 		TicTacToe ttt = new TicTacToe();
 	}
-
-	
 }
