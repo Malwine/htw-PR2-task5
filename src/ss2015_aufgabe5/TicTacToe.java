@@ -17,9 +17,6 @@ public class TicTacToe extends JFrame implements ActionListener {
 	boolean isNumber;
 	boolean start;
 
-	/**
-	 * Game constructor.
-	 */
 	TicTacToe(){
 		super();													// inherit from JFrame
 		this.setTitle("TicTacToe");									// set title of frame
@@ -85,15 +82,13 @@ public class TicTacToe extends JFrame implements ActionListener {
 		
 		if (command.equals("redStarts")){
 			newGame();
-			label1.setForeground(Color.RED);
-			label1.setText("red starts");
+			setLabel(Color.RED, "red starts");
 			redsTurn = true;
 			start = true;
 		}
 		else if (command.equals("blackStarts")){
 			newGame();
-			label1.setForeground(Color.BLACK);
-			label1.setText("black starts");
+			setLabel(Color.BLACK, "black starts");
 			redsTurn = false;
 			start = true;
 		}
@@ -103,17 +98,15 @@ public class TicTacToe extends JFrame implements ActionListener {
 				buttons[index].setText("O");
 				
 				if (verticalWin("O") || horizontalWin("O") || diagonalWin("O")){		// check if game is won
-					label1.setForeground(Color.RED);
-					label1.setText("red won!");
+					setLabel(Color.RED, "red won!");
 					disableFields();
 					end = true;
 				}
 				else if(tie()) {
-					label1.setText("it's a tie! start again");
+					setLabel(Color.BLACK, "it's a tie! start again");
 				}
-				else {			
-					label1.setForeground(Color.BLACK);
-					label1.setText("blacks turn");
+				else {
+					setLabel(Color.BLACK, "blacks turn");
 					redsTurn = false;													// toggle the turn to black 
 				}
 			}
@@ -122,17 +115,15 @@ public class TicTacToe extends JFrame implements ActionListener {
 				buttons[index].setText("X");
 				
 				if (verticalWin("X") || horizontalWin("X") || diagonalWin("X")){
-					label1.setForeground(Color.BLACK);
-					label1.setText("black won!");
+					setLabel(Color.BLACK, "black won!");
 					disableFields();
 					end = true;
 				}
 				else if(tie()) {
-					label1.setText("it's a tie! start again");
+					setLabel(Color.BLACK, "it's a tie! start again");
 				}
 				else {
-					label1.setForeground(Color.RED);
-					label1.setText("reds turn");
+					setLabel(Color.RED, "reds turn");
 					redsTurn = true;													// toggle the turn to red
 				}
 			}
@@ -175,6 +166,11 @@ public class TicTacToe extends JFrame implements ActionListener {
 	
 	public boolean checkField(int index, String input){
 		return buttons[index].getText().equals(input);
+	}
+	
+	public void setLabel(Color c,String input) {
+		label1.setForeground(c);
+		label1.setText(input);
 	}
 	
 	public void newGame(){
